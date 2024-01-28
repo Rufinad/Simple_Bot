@@ -13,13 +13,17 @@ button_3 = InlineKeyboardButton(
     text='Как себя рубль чувствует?',
     callback_data='exchange'
 )
+button_4 = InlineKeyboardButton(
+    text='Изменить условия рассылки',
+    callback_data='change_info'
+)
 
 # Создаем объект инлайн-клавиатуры
 start_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[[button_1],
                      [button_2],
-                     [button_3]]
-)
+                     [button_3],
+                     [button_4]])
 
 
 

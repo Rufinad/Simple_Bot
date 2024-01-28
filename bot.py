@@ -19,9 +19,6 @@ from aiogram.fsm.storage.redis import Redis, RedisStorage, DefaultKeyBuilder
 from apscheduler.jobstores.redis import RedisJobStore
 from apscheduler_di import ContextSchedulerDecorator
 import asyncpg
-from states.statesform import StartSG
-
-
 
 """цель бота отправлять мне каждое утро сообщение с погодой в Санкт-Петербурге,
 курсом доллара и евро, и еще рандомный анекдот"""

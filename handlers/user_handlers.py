@@ -20,8 +20,9 @@ router = Router()
 async def process_start_command(message: Message, request: Request, state: FSMContext):
     await request.add_data(message.from_user.id, message.from_user.first_name)  # когда пользователь нажимает старт его имя и id заносятся в бд
     await state.clear()
-    await message.answer(text='Привет! каждый день буду в 07:00 присылать тебе погоду на новый день,'
-                              ' курс валют и новый анекдот',
+    await message.answer(text='Привет! каждый день буду присылать тебе погоду на новый день,'
+                              ' курс валют и новый анекдот, если хочешь от чего отказаться, '
+                              'нажми "изменить условия рассылки"',
                          reply_markup=start_keyboard)
 
 
