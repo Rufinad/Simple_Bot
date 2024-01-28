@@ -6,7 +6,7 @@ from aiogram.types import Message
 
 
 def office_hours() -> bool:
-    return datetime.now().weekday() in (0, 1, 2, 3, 4) and datetime.now().hour in ([i for i in range(6, 23)])
+    return datetime.now().weekday() in (0, 1, 2, 3, 4, 5, 6) and datetime.now().hour in ([i for i in range(6, 23)])
 
 
 class OfficeHoursMiddleware(BaseMiddleware):

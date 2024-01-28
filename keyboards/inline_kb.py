@@ -22,31 +22,4 @@ start_keyboard = InlineKeyboardMarkup(
 )
 
 
-# создаем клавиатуру, которая позволит выбрать информацию для рассылки
-# Создаем объекты инлайн-кнопок
-btn_1 = InlineKeyboardButton(
-    text='хочу каждый день смеяться 😅',
-    callback_data='joke_everyday'
-)
-btn_2 = InlineKeyboardButton(
-    text='хочу знать, что творится за окном ☂️',
-    callback_data='weather_everyday'
-)
-btn_3 = InlineKeyboardButton(
-    text='хочу знать курс вражеских валют 💵',
-    callback_data='exchange_everyday'
-)
-
-btn_4 = InlineKeyboardButton(
-    text='на этом все... жду сообщений',
-    callback_data='send_type_info'
-)
-
-# Создаем объект инлайн-клавиатуры
-type_info_kbr = InlineKeyboardMarkup(
-    inline_keyboard=[[btn_1],
-                     [btn_2],
-                     [btn_3],
-                     [btn_4]]
-)
 

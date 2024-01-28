@@ -2,19 +2,24 @@ import asyncio
 from datetime import datetime, timedelta
 import logging
 from aiogram import Bot, Dispatcher
+from aiogram_dialog import setup_dialogs
+
+from bot_dialogs.dialogs import info_type_dialog
 from keyboards.main_menu import set_main_menu
 from handlers import user_handlers
 from handlers import form
+from bot_dialogs import handlers
 from config_data.config import Config, load_config
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from handlers import apsched
 from middlewares.apschedulermiddleware import SchedulerMiddleware
 from middlewares.office_hours import OfficeHoursMiddleware
 from middlewares.dbmiddleware import DbSession
-from aiogram.fsm.storage.redis import RedisStorage
+from aiogram.fsm.storage.redis import Redis, RedisStorage, DefaultKeyBuilder
 from apscheduler.jobstores.redis import RedisJobStore
 from apscheduler_di import ContextSchedulerDecorator
 import asyncpg
+from states.statesform import StartSG
 
 
 
@@ -42,7 +47,10 @@ async def main():
     # создаем пул соединений с базой данных
     pool_connect = await create_pool()
     # создадим хранилище с помощью Redis и передадим в диспетчер
-    storage = RedisStorage.from_url('redis://localhost:6379/0')
+    redis = Redis(
+        host='localhost'
+    )
+    storage = RedisStorage(redis=redis, key_builder=DefaultKeyBuilder(with_destiny=True))
     dp = Dispatcher(storage=storage)
     jobstores = {
         'default': RedisJobStore(jobs_key='dispatched_trips_jobs',
@@ -63,6 +71,9 @@ async def main():
     # Регистриуем роутеры в диспетчере
     dp.include_router(user_handlers.router)
     dp.include_router(form.router)
+    dp.include_router(handlers.router)
+    dp.include_router(info_type_dialog)
+    setup_dialogs(dp)
 
     dp.message.middleware.register(OfficeHoursMiddleware())
     # dp.update.middleware.register(SchedulerMiddleware(scheduler))

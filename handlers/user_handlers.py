@@ -1,4 +1,5 @@
 from aiogram import Router, F
+from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command, CommandStart
 from aiogram.enums import ParseMode
@@ -16,8 +17,9 @@ router = Router()
 
 # Этот хэндлер срабатывает на команду /start
 @router.message(CommandStart())
-async def process_start_command(message: Message, request: Request):
+async def process_start_command(message: Message, request: Request, state: FSMContext):
     await request.add_data(message.from_user.id, message.from_user.first_name)  # когда пользователь нажимает старт его имя и id заносятся в бд
+    await state.clear()
     await message.answer(text='Привет! каждый день буду в 07:00 присылать тебе погоду на новый день,'
                               ' курс валют и новый анекдот',
                          reply_markup=start_keyboard)
@@ -65,3 +67,5 @@ async def send_rate(message: Message):
 async def send_joke(message: Message):
     joke = get_joke()
     await message.answer(joke, ParseMode.HTML)
+
+
