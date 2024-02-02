@@ -47,8 +47,8 @@ start_dialog = Dialog(
                 id='multi_topics',
                 item_id_getter=operator.itemgetter(1),
                 items="topics",
-                on_click=category_filled
-                #on_state_changed=category_filled #попробуйте так и так
+                # on_click=category_filled
+                on_state_changed=category_filled #попробуйте так и так
             ),
         ),
         state=StartSG.start,
