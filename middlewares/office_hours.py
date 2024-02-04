@@ -17,7 +17,7 @@ class OfficeHoursMiddleware(BaseMiddleware):
         data: Dict[str, Any]
     ) -> Any:
         # используем функцию office_hours, чтобы понять в рабочее время или нет было написано сообщение
-        if not office_hours():
+        if office_hours():
             return await handler(event, data)
         await event.answer(f'Время работы бота: \r\nПн-пт с 8 до 18. Я же тоже должен отдыхать!!!')
 

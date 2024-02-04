@@ -3,12 +3,14 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command, CommandStart
 from aiogram.enums import ParseMode
+from aiogram_dialog import DialogManager, StartMode
+
 from services.weather import get_weather_data
 from services.exchange_rate import get_exchange_rate
 from services.joke import get_joke
 from keyboards.inline_kb import start_keyboard
 from models.dbconnect import Request
-
+from states.statesform import StartSG
 
 router = Router()
 
@@ -22,7 +24,7 @@ async def process_start_command(message: Message, request: Request, state: FSMCo
     await state.clear()
     await message.answer(text='Привет! каждый день буду присылать тебе погоду на новый день,'
                               ' курс валют и новый анекдот, если хочешь от чего отказаться, '
-                              'нажми "изменить условия рассылки"',
+                              'в главном меню нажми "изменить условия рассылки"',
                          reply_markup=start_keyboard)
 
 

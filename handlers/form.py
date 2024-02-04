@@ -7,7 +7,7 @@ from aiogram.fsm.context import FSMContext
 from states.statesform import StepsForm, StartSG
 
 router = Router()
-
+'''Данная форма позволяет пользователю ввести персональные данные'''
 
 @router.message(Command(commands='form'))  # хендлер зарегистрирован на сообщения по команде form
 async def get_form(message: Message, state: FSMContext):
@@ -25,7 +25,11 @@ async def get_name(message: Message, state: FSMContext):
 @router.message(StepsForm.GET_LAST_NAME)  # хендлер зарегистрирован на сообщения из состояния start
 async def get_last_name(message: Message, state: FSMContext):
     await state.update_data(last_name=message.text)
-    await message.answer(f'Твоя фамилия: \r\n{message.text}\r\nТеперь расскажи какую информацию ты хочешь получать')
+    contex_data = await state.get_data()  # получаем данные сохраненные в состоянии
+    name = contex_data.get('name')
+    await message.answer(f'Твое имя: \r\n{name}\r\n'
+                         f'Твоя фамилия: \r\n{message.text}\r\n'
+                         f'Приятно познакомиться!')
     await state.clear()
 
 

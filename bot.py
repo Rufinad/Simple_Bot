@@ -70,6 +70,7 @@ async def main():
     dp.include_router(form.router)
     dp.include_router(handlers.router)
     dp.include_router(info_type_dialog)
+
     setup_dialogs(dp)
 
     dp.message.middleware.register(OfficeHoursMiddleware())
