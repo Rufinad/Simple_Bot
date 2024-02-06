@@ -3,6 +3,8 @@ from aiogram_dialog import StartMode, DialogManager
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command
 from aiogram_dialog.widgets.kbd import ManagedCheckbox, Multiselect, ManagedMultiselect
+
+from models.dbconnect import Request
 from states.statesform import StepsForm, StartSG
 from aiogram_dialog import Dialog, DialogManager, StartMode, Window, setup_dialogs
 from aiogram_dialog.widgets.kbd import Button
@@ -23,26 +25,35 @@ async def get_type_info(message: Message, dialog_manager: DialogManager):
 
 
 # хендлер срабатывает на отправку сообщения "изменить данные рассылки"
-async def category_filled(callback: CallbackQuery, checkbox: ManagedMultiselect, dialog_manager: DialogManager, *args, **kwargs):
-    clicked_button = checkbox.get_checked()
-    # dialog_manager.dialog_data['clicked_button'] = checkbox.get_checked()  # запишем id кнопок на которые нажали
-    print(clicked_button)  # показывает нам какие кнопки нажаты
+# async def category_filled(callback: CallbackQuery, checkbox: ManagedMultiselect, dialog_manager: DialogManager, *args, **kwargs):
+#     clicked_button = checkbox.get_checked()
+#     # dialog_manager.dialog_data['clicked_button'] = checkbox.get_checked()  # запишем id кнопок на которые нажали
+#     print(clicked_button)  # показывает нам какие кнопки нажаты
 
 
-async def result_getter(dialog_manager: DialogManager, **kwargs):
+async def result_getter(dialog_manager: DialogManager, request: Request, **kwargs,):
     widget = dialog_manager.find('multi_topics')
-    checked_id_btn = widget.get_checked()
+    checked_id_btn = widget.get_checked()  # список с id кнопок, которые выбрали
     data = dialog_manager.dialog_data['all_button']
-    # вернем словарь с выбранными темами рассылки
+    # список с выбранными темами рассылки
     result_lst = []
     for el in data:
         if el[1] in checked_id_btn:
             result_lst.append(el[0])
+    # определим какие темы надо отправлять ежедневно и внесем изменения в бд
+    joke, weather, exchange = False, False, False
+    if '1' in checked_id_btn:
+        joke = True
+    if '2' in checked_id_btn:
+        weather = True
+    if '3' in checked_id_btn:
+        exchange = True
+    await request.change_data(dialog_manager.event.from_user.id, joke, weather, exchange)
     dialog_manager.dialog_data.clear()
-    print(result_lst)
+    # вернем словарь чтобы Jinja отработала корректно
     return {
         'result':  result_lst
     }
 
-    # вернем словарь чтобы Jinja отработала корректно
+
 

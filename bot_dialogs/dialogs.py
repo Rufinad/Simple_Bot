@@ -3,7 +3,7 @@ import operator
 from aiogram.types import CallbackQuery
 from aiogram_dialog import StartMode, DialogManager
 from aiogram_dialog.widgets.kbd import ManagedCheckbox, Multiselect, SwitchTo, Next
-from bot_dialogs.handlers import result_getter, category_filled
+from bot_dialogs.handlers import result_getter
 from states.statesform import StepsForm, StartSG
 from aiogram_dialog import Dialog, DialogManager, StartMode, Window, setup_dialogs
 from aiogram_dialog.widgets.text import Const, Format, List, Multi, Case, Jinja
@@ -22,7 +22,7 @@ info_type_dialog = Dialog(
                 item_id_getter=operator.itemgetter(1),
                 items="topics",
                 min_selected=1,
-                on_state_changed=category_filled  # показывает нам какие кнопки нажаты
+                # on_state_changed=category_filled  # показывает нам какие кнопки нажаты
             ),
             Next(Const("Далее"))
         ),
@@ -35,10 +35,25 @@ info_type_dialog = Dialog(
                 "{% for item in result %}"
                 "• {{item}}\n"
                 "{% endfor %}"
+                "По этим темам ты будешь получать сообщение каждое утро в 7:00\n"
+                ),
+            Row(
+                Button(
+                    text=Const('Меня устраивает!'),
+                    id='button_1'
+                    # on_click=button_clicked)
+                ),
+
+                Button(
+                    text=Const('Поменять время рассылки!'),
+                    id='button_2'
+                    # on_click=button_clicked)
+                ),
             ),
             state=StartSG.res,
             getter=result_getter,
             parse_mode="html",
+
         ),
 )
 
