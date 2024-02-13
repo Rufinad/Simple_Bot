@@ -1,10 +1,11 @@
-from aiogram import Router, F
+from aiogram import Router, F, Bot
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command, CommandStart
 from aiogram.enums import ParseMode
 from aiogram_dialog import DialogManager, StartMode
 
+from handlers.apsched import send_message_cron
 from services.weather import get_weather_data
 from services.exchange_rate import get_exchange_rate
 from services.joke import get_joke
@@ -66,7 +67,7 @@ async def send_rate(message: Message):
 
 
 # Этот хэндлер срабатывает на команду /smile_me
-@router.message(Command(commands='smile_me'), )
+@router.message(Command(commands='smile_me'))
 async def send_joke(message: Message):
     joke = get_joke()
     await message.answer(joke, ParseMode.HTML)

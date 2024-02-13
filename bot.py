@@ -59,9 +59,9 @@ async def main():
     # добавляем возможность отправки сообщений по времени
     scheduler = ContextSchedulerDecorator(AsyncIOScheduler(timezone='Europe/Moscow', jobstores=jobstores))
     scheduler.ctx.add_instance(bot, declared_class=Bot)
-    # scheduler.add_job(apsched.send_message_time, trigger='date', run_date=datetime.now() + timedelta(seconds=10))
-    scheduler.add_job(apsched.send_message_cron, trigger='cron', hour='7',
-                      minute='0', start_date=datetime.now())
+    scheduler.add_job(apsched.send_message_time, trigger='date', run_date=datetime.now() + timedelta(seconds=10))
+    # scheduler.add_job(apsched.send_message_cron, trigger='cron', hour='13',
+    #                   minute='35', start_date=datetime.now())
     # scheduler.add_job(apsched.send_message_interval, trigger='interval', seconds=60)
     # scheduler.start()
 

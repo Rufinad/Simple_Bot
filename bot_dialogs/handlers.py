@@ -34,21 +34,23 @@ async def get_type_info(message: Message, dialog_manager: DialogManager):
 async def result_getter(dialog_manager: DialogManager, request: Request, **kwargs,):
     widget = dialog_manager.find('multi_topics')
     checked_id_btn = widget.get_checked()  # список с id кнопок, которые выбрали
-    data = dialog_manager.dialog_data['all_button']
+    data = dialog_manager.dialog_data['all_button']  # тут все кнопки
     # список с выбранными темами рассылки
     result_lst = []
-    for el in data:
+    for el in data:  # бежим по всем кнопкам и добавляем тексты нажатых кнопок в список
         if el[1] in checked_id_btn:
             result_lst.append(el[0])
     # определим какие темы надо отправлять ежедневно и внесем изменения в бд
-    joke, weather, exchange = False, False, False
+    joke, weather, exchange, horoscope = False, False, False, False
     if '1' in checked_id_btn:
         joke = True
     if '2' in checked_id_btn:
         weather = True
     if '3' in checked_id_btn:
         exchange = True
-    await request.change_data(dialog_manager.event.from_user.id, joke, weather, exchange)
+    if '4' in checked_id_btn:  # другая логика, необходимо дать клавиатуру
+        horoscope = True
+    await request.change_data(dialog_manager.event.from_user.id, joke, weather, exchange, horoscope)
     dialog_manager.dialog_data.clear()
     # вернем словарь чтобы Jinja отработала корректно
     return {

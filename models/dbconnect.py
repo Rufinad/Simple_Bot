@@ -12,12 +12,15 @@ class Request:
         await self.connector.execute(query)
 
     # метод изменит темы рассылок для конкретного пользователя
-    async def change_data(self, user_id, joke, weather, exchange):
-        query = f"UPDATE data_users SET joke = '{joke}', weather = '{weather}', exchange = '{exchange}'"\
+    async def change_data(self, user_id, joke, weather, exchange, horoscope):
+        query = f"UPDATE data_users SET joke = '{joke}', weather = '{weather}', exchange = '{exchange}'," \
+                f" horoscope = '{horoscope}'"\
                 f"WHERE user_id = {user_id}"
         await self.connector.execute(query)
 
     # метод для получения списка тем для рассылки по пользователю
-    async def get_data(self, user_id):
-        query = f"SELECT * FROM data_users WHERE user_id = {user_id};"
-        await self.connector.execute(query)
+    async def get_data(self):
+        query = f"SELECT * FROM data_users;"
+        result = await self.connector.fetch(query)  # получили все данные из бд
+        # print(result[0]['user_id'])  # 791059676 - id пользователя например
+        return result

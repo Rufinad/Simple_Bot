@@ -9,4 +9,5 @@ class StepsForm(StatesGroup):
 class StartSG(StatesGroup):
     start = State()  # начало диалога
     res = State()  # начало диалога
+    horo = State()  # диалог для выбора гороскопа
 
