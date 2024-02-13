@@ -3,21 +3,12 @@ import operator
 from aiogram.types import CallbackQuery
 from aiogram_dialog import StartMode, DialogManager
 from aiogram_dialog.widgets.kbd import ManagedCheckbox, Multiselect, SwitchTo, Next, Radio
-from bot_dialogs.handlers import result_getter
+from bot_dialogs.handlers import result_getter, after_horo, button_clicked, set_finish, change_time
 from states.statesform import StepsForm, StartSG
 from aiogram_dialog import Dialog, DialogManager, StartMode, Window, setup_dialogs
 from aiogram_dialog.widgets.text import Const, Format, List, Multi, Case, Jinja
 from aiogram_dialog.widgets.kbd import Button, Row, ManagedMultiselect, Column, Group
 from bot_dialogs.getters import get_topics, get_zodiac
-
-
-async def button_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    widget = dialog_manager.find('multi_topics')
-    checked_id_btn = widget.get_checked()  # список с id кнопок, которые выбрали
-    if '4' in checked_id_btn:
-        await dialog_manager.switch_to(StartSG.horo)  # если кнопка с id 4 выбрана, то переходим к выбору знака зодиака
-    else:
-        await dialog_manager.switch_to(StartSG.res)
 
 
 info_type_dialog = Dialog(
@@ -54,7 +45,11 @@ info_type_dialog = Dialog(
             ),
             width=3
         ),
-        Next(Const("Далее")),
+        Button(
+            text=Const("Далее"),
+            id='button_12',
+            on_click=after_horo
+        ),
         state=StartSG.horo,
         getter=get_zodiac
     ),
@@ -69,14 +64,14 @@ info_type_dialog = Dialog(
         Row(
             Button(
                 text=Const('Меня устраивает!'),
-                id='button_13'
-                # on_click=button_clicked)
+                id='button_13',
+                on_click=set_finish
             ),
 
             Button(
                 text=Const('Поменять время рассылки!'),
-                id='button_14'
-                # on_click=button_clicked)
+                id='button_14',
+                on_click=change_time
             ),
         ),
         state=StartSG.res,

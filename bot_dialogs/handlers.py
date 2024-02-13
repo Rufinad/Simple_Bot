@@ -24,13 +24,23 @@ async def get_type_info(message: Message, dialog_manager: DialogManager):
     await dialog_manager.start(state=StartSG.start, mode=StartMode.RESET_STACK)
 
 
-# хендлер срабатывает на отправку сообщения "изменить данные рассылки"
-# async def category_filled(callback: CallbackQuery, checkbox: ManagedMultiselect, dialog_manager: DialogManager, *args, **kwargs):
-#     clicked_button = checkbox.get_checked()
-#     # dialog_manager.dialog_data['clicked_button'] = checkbox.get_checked()  # запишем id кнопок на которые нажали
-#     print(clicked_button)  # показывает нам какие кнопки нажаты
+async def button_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    widget = dialog_manager.find('multi_topics')
+    checked_id_btn = widget.get_checked()  # список с id кнопок, которые выбрали
+    if '4' in checked_id_btn:
+        await dialog_manager.switch_to(StartSG.horo)  # если кнопка с id 4 выбрана, то переходим к выбору знака зодиака
+    else:
+        await dialog_manager.switch_to(StartSG.res)
 
 
+async def after_horo(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    widget = dialog_manager.find('radio_zodiac')
+    checked_id_btn = widget.get_checked()  # список с id кнопок, которые выбраны
+    dialog_manager.dialog_data['zodiac_sign'] = checked_id_btn  # записали номер выбранного знака зодиака
+    await dialog_manager.switch_to(StartSG.res)
+
+
+# так делать неправильно, геттер не для этого
 async def result_getter(dialog_manager: DialogManager, request: Request, **kwargs,):
     widget = dialog_manager.find('multi_topics')
     checked_id_btn = widget.get_checked()  # список с id кнопок, которые выбрали
@@ -49,13 +59,22 @@ async def result_getter(dialog_manager: DialogManager, request: Request, **kwarg
     if '3' in checked_id_btn:
         exchange = True
     if '4' in checked_id_btn:  # другая логика, необходимо дать клавиатуру
-        horoscope = True
+        horoscope = dialog_manager.dialog_data['zodiac_sign']
     await request.change_data(dialog_manager.event.from_user.id, joke, weather, exchange, horoscope)
     dialog_manager.dialog_data.clear()
     # вернем словарь чтобы Jinja отработала корректно
     return {
         'result':  result_lst
     }
+
+async def set_finish(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    await callback.answer('Да я и не сомневался')
+
+
+async def change_time(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    await callback.answer('Ничего не получится, разработчик ленивый')
+
+
 
 
 
