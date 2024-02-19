@@ -3,7 +3,8 @@ import operator
 from aiogram.types import CallbackQuery
 from aiogram_dialog import StartMode, DialogManager
 from aiogram_dialog.widgets.kbd import ManagedCheckbox, Multiselect, SwitchTo, Next, Radio
-from bot_dialogs.handlers import result_getter, after_horo, button_clicked, set_finish, change_time
+from bot_dialogs.handlers import result_getter, after_horo, button_clicked
+from handlers.apsched import send_message_time
 from states.statesform import StepsForm, StartSG
 from aiogram_dialog import Dialog, DialogManager, StartMode, Window, setup_dialogs
 from aiogram_dialog.widgets.text import Const, Format, List, Multi, Case, Jinja
@@ -60,19 +61,6 @@ info_type_dialog = Dialog(
             "• {{item}}\n"
             "{% endfor %}"
             "По этим темам ты будешь получать сообщение каждое утро в 7:00\n"
-        ),
-        Row(
-            Button(
-                text=Const('Меня устраивает!'),
-                id='button_13',
-                on_click=set_finish
-            ),
-
-            Button(
-                text=Const('Поменять время рассылки!'),
-                id='button_14',
-                on_click=change_time
-            ),
         ),
         state=StartSG.res,
         getter=result_getter,

@@ -24,3 +24,10 @@ class Request:
         result = await self.connector.fetch(query)  # получили все данные из бд
         # print(result[0]['user_id'])  # 791059676 - id пользователя например
         return result
+
+
+    async def get_goro_db(self, user_id):
+        query = f"SELECT horoscope from data_users where user_id = {user_id}"
+        result = await self.connector.fetch(query)  # получили все данные из бд
+        # print(result[0]['horoscope'])  # scorpio - гороскоп пользователя например
+        return result

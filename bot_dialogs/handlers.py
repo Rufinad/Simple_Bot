@@ -58,21 +58,15 @@ async def result_getter(dialog_manager: DialogManager, request: Request, **kwarg
         weather = True
     if '3' in checked_id_btn:
         exchange = True
-    if '4' in checked_id_btn:  # другая логика, необходимо дать клавиатуру
-        horoscope = dialog_manager.dialog_data['zodiac_sign']
+    if '4' in checked_id_btn:  # передает знак зодиака в бд
+        horoscope_id = dialog_manager.dialog_data['zodiac_sign']  # номер id выбранного знака гороскопа
+        horoscope = dialog_manager.dialog_data['all_zodiacs'][int(horoscope_id)-1][2]  # из геттера достанем наименование знака
     await request.change_data(dialog_manager.event.from_user.id, joke, weather, exchange, horoscope)
     dialog_manager.dialog_data.clear()
     # вернем словарь чтобы Jinja отработала корректно
     return {
         'result':  result_lst
     }
-
-async def set_finish(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    await callback.answer('Да я и не сомневался')
-
-
-async def change_time(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    await callback.answer('Ничего не получится, разработчик ленивый')
 
 
 

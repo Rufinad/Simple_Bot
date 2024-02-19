@@ -5,7 +5,7 @@ from aiogram.filters import Command, CommandStart
 from aiogram.enums import ParseMode
 from aiogram_dialog import DialogManager, StartMode
 
-from handlers.apsched import send_message_cron
+from handlers.apsched import send_message_cron, send_message_time
 from services.weather import get_weather_data
 from services.exchange_rate import get_exchange_rate
 from services.joke import get_joke
@@ -20,13 +20,14 @@ router = Router()
 
 # Этот хэндлер срабатывает на команду /start
 @router.message(CommandStart())
-async def process_start_command(message: Message, request: Request, state: FSMContext):
+async def process_start_command(message: Message, bot: Bot, request: Request, state: FSMContext):
     await request.add_data(message.from_user.id, message.from_user.first_name)  # когда пользователь нажимает старт его имя и id заносятся в бд
     await state.clear()
-    await message.answer(text='Привет! каждый день буду присылать тебе погоду на новый день,'
-                              ' курс валют и новый анекдот, если хочешь от чего-то отказаться, '
-                              'в главном меню нажми "изменить условия рассылки"',
-                         reply_markup=start_keyboard)
+    # await message.answer(text='Привет! каждый день буду присылать тебе погоду на новый день,'
+    #                           ' курс валют и новый анекдот, если хочешь от чего-то отказаться, '
+    #                           'в главном меню нажми "изменить условия рассылки"',
+    #                      reply_markup=start_keyboard)
+    await send_message_time(bot, request)
 
 
 # @router.message(Command(commands='get_weather'))  # эта хрень работает если руками прописать /get_weather
@@ -49,7 +50,6 @@ async def send_rate(callback: CallbackQuery):
 async def send_joke(callback: CallbackQuery):
     joke = get_joke()
     await callback.message.answer(joke, ParseMode.HTML)
-
 
 
 '''Тут мы обработаем получение текстовых команд, либо через главное меню бота, либо при написании команд вручную'''
