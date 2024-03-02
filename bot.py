@@ -20,6 +20,8 @@ from apscheduler.jobstores.redis import RedisJobStore
 from apscheduler_di import ContextSchedulerDecorator
 import asyncpg
 
+from models.dbconnect import Request
+
 """цель бота отправлять мне каждое утро сообщение с погодой в Санкт-Петербурге,
 курсом доллара и евро, и еще рандомный анекдот"""
 '''цель отработать самостоятельное создание бота, парсинг сайтов, работа с api сайтов'''
@@ -60,9 +62,9 @@ async def main():
     scheduler = ContextSchedulerDecorator(AsyncIOScheduler(timezone='Europe/Moscow', jobstores=jobstores))
     scheduler.ctx.add_instance(bot, declared_class=Bot)
     scheduler.add_job(apsched.send_message_time, trigger='date', run_date=datetime.now() + timedelta(seconds=10))
-    scheduler.add_job(apsched.send_message_cron, trigger='cron', hour='23',
-                      minute='40', start_date=datetime.now())
-    # scheduler.add_job(apsched.send_message_interval, trigger='interval', seconds=60)
+    # scheduler.add_job(apsched.send_message_cron, trigger='cron', hour='23',
+    #                   minute='24', start_date=datetime.now())
+
     scheduler.start()
 
     # Регистриуем роутеры в диспетчере

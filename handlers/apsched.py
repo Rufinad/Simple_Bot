@@ -7,6 +7,7 @@ from services.weather import get_weather_data
 from services.exchange_rate import get_exchange_rate
 from services.joke import get_joke
 
+
 async def send_message_time(bot: Bot, request: Request):
     all_data = await request.get_data()
     # создадим пустые списки по темам рассылки и добавим туда id пользователей у которых эти темы True
