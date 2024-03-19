@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 import logging
 from aiogram import Bot, Dispatcher
 from aiogram_dialog import setup_dialogs
-
 from bot_dialogs.dialogs import info_type_dialog
 from keyboards.main_menu import set_main_menu
 from handlers import user_handlers
@@ -19,11 +18,10 @@ from aiogram.fsm.storage.redis import Redis, RedisStorage, DefaultKeyBuilder
 from apscheduler.jobstores.redis import RedisJobStore
 from apscheduler_di import ContextSchedulerDecorator
 import asyncpg
-
 from models.dbconnect import Request
 
-"""цель бота отправлять мне каждое утро сообщение с погодой в Санкт-Петербурге,
-курсом доллара и евро, и еще рандомный анекдот"""
+"""цель бота отправлять подписчикам каждое утро сообщение с погодой в Санкт-Петербурге,
+курсом доллара и евро, гороскопом по выбранному знаку зодиака и еще рандомный анекдот"""
 '''цель отработать самостоятельное создание бота, парсинг сайтов, работа с api сайтов'''
 
 
@@ -59,18 +57,20 @@ async def main():
     }
 
     # добавляем возможность отправки сообщений по времени
-    scheduler = ContextSchedulerDecorator(AsyncIOScheduler(timezone='Europe/Moscow', jobstores=jobstores))
-    scheduler.ctx.add_instance(bot, declared_class=Bot)
-    scheduler.add_job(apsched.send_message_time, trigger='date', run_date=datetime.now() + timedelta(seconds=10))
-    # scheduler.add_job(apsched.send_message_cron, trigger='cron', hour='23',
+    # scheduler = ContextSchedulerDecorator(AsyncIOScheduler(timezone='Europe/Moscow', jobstores=jobstores))
+    # scheduler.ctx.add_instance(bot, declared_class=Bot)
+    # scheduler.add_job(apsched.send_message_time, trigger='date', run_date=datetime.now() + timedelta(seconds=10),
+    #                   kwargs={'request': Request, 'connector': asyncpg.pool.Pool})
+    # scheduler.add_job(apsched.send_message_time, trigger='cron', hour='23',
     #                   minute='24', start_date=datetime.now())
 
-    scheduler.start()
+    # scheduler.start()
 
     # Регистриуем роутеры в диспетчере
+    dp.include_router(handlers.router)
     dp.include_router(user_handlers.router)
     dp.include_router(form.router)
-    dp.include_router(handlers.router)
+
     dp.include_router(info_type_dialog)
 
 

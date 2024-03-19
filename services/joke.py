@@ -16,7 +16,9 @@ def get_joke():
         jokes = soup.find_all('div', class_=['anekdot_text'])
         lst_jokes = [joke.text for joke in jokes]
         res_joke = random.choice(lst_jokes)
+        # print(res_joke)
         return res_joke.encode()
+
 
 
 if __name__ == '__main__':

@@ -4,8 +4,6 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command, CommandStart
 from aiogram.enums import ParseMode
 from aiogram_dialog import DialogManager, StartMode
-
-from handlers.apsched import send_message_cron
 from services.horoscope import get_horoscope
 from services.weather import get_weather_data
 from services.exchange_rate import get_exchange_rate
@@ -34,14 +32,14 @@ async def process_start_command(message: Message, bot: Bot, request: Request, st
 @router.callback_query(F.data == 'weather')  # работает если нажать на кнопку которой  callback == weather
 async def send_weather(callback: CallbackQuery):
     weather_data = get_weather_data()
-    await callback.answer(weather_data)
+    await callback.message.answer(weather_data, show_alert=True)
 
 
 # @router.message(Command(commands='get_exchange_rate'))
 @router.callback_query(F.data == 'exchange')  # работает если нажать на кнопку которой  callback == exchange
 async def send_rate(callback: CallbackQuery):
     exchange_rate = get_exchange_rate()
-    await callback.answer(exchange_rate, show_alert=True)
+    await callback.message.answer(exchange_rate, show_alert=True)
 
 
 # Этот хэндлер срабатывает на команду /smile_me
