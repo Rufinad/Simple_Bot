@@ -1,25 +1,20 @@
 import random
-
 from bs4 import BeautifulSoup
 import requests
 from fake_useragent import UserAgent
 
 
-def get_joke():
+def get_horoscope(zodiac: str):
     ua = UserAgent()
     headers = {'User-Agent': ua.chrome}
-    url = 'https://anekdotme.ru/random/'
+    url = f'https://horo.mail.ru/prediction/{zodiac}/today/'
     response = requests.get(url, headers=headers)
-    # response.encoding = 'utf-8'
     soup = BeautifulSoup(response.text, 'lxml')
     if response.status_code == 200:
-        jokes = soup.find_all('div', class_=['anekdot_text'])
-        lst_jokes = [joke.text for joke in jokes]
-        res_joke = random.choice(lst_jokes)
-        # print(res_joke)
-        return res_joke.encode()
-
+        horo = soup.find('div', class_=['article__item article__item_alignment_left article__item_html']).text
+        return horo
 
 
 if __name__ == '__main__':
-    get_joke()
+    get_horoscope('scorpio')
+
