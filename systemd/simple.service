@@ -1,12 +1,12 @@
 [Unit]
-Description=Simple_bot
+Description=Simple_Bot
 After=syslog.target
 After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/san/Simple_bot
-ExecStart=/home/san/Simple_bot/venv/bin/python3 /home/san/Simple_bot/bot.py
+WorkingDirectory=/home/san/Simple_Bot
+ExecStart=/home/san/Simple_Bot/venv/bin/python3 /home/san/Simple_Bot/bot.py
 Environment=BOT_TOKEN=
 KillMode=process
 Restart=on-failure
