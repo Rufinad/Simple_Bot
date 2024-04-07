@@ -43,4 +43,3 @@ async def send_message_time(bot: Bot, request: Request, connector: asyncpg.pool.
 
 
 
-
