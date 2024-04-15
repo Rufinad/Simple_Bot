@@ -32,14 +32,14 @@ async def process_start_command(message: Message, bot: Bot, request: Request, st
 @router.callback_query(F.data == 'weather')  # работает если нажать на кнопку которой  callback == weather
 async def send_weather(callback: CallbackQuery):
     weather_data = get_weather_data()
-    await callback.message.answer(weather_data, show_alert=True)
+    await callback.message.answer(weather_data, show_alert=True, reply_markup=start_keyboard)
 
 
 # @router.message(Command(commands='get_exchange_rate'))
 @router.callback_query(F.data == 'exchange')  # работает если нажать на кнопку которой  callback == exchange
 async def send_rate(callback: CallbackQuery):
     exchange_rate = get_exchange_rate()
-    await callback.message.answer(exchange_rate, show_alert=True)
+    await callback.message.answer(exchange_rate, show_alert=True, reply_markup=start_keyboard)
 
 
 # Этот хэндлер срабатывает на команду /smile_me
@@ -47,7 +47,7 @@ async def send_rate(callback: CallbackQuery):
 @router.callback_query(F.data == 'joke')  # работает если нажать на кнопку которой  callback == joke
 async def send_joke(callback: CallbackQuery):
     joke = get_joke()
-    await callback.message.answer(joke, ParseMode.HTML)
+    await callback.message.answer(joke, ParseMode.HTML, reply_markup=start_keyboard)
 
 @router.callback_query(F.data == 'horoscope')  # работает если нажать на кнопку которой  callback == horoscope
 async def send_horoscope(callback: CallbackQuery, request: Request):
@@ -56,8 +56,9 @@ async def send_horoscope(callback: CallbackQuery, request: Request):
         res = get_horoscope(horo[0]['horoscope'])  # смотри dbconnect, выдаем гороскоп
         await callback.message.answer(res, ParseMode.HTML)
     except Exception:
-        await callback.message.answer('Ты не выбрал свой знак зодиака.\n'
-                                      'Зайди в главном меню и нажми "Изменить условия рассылки"')
+        await callback.message.answer(text='Ты не выбрал свой знак зодиака.\n'
+                                      'Зайди в главном меню и нажми "Изменить условия рассылки"',
+                                      reply_markup=start_keyboard)
 
 
 '''Тут мы обработаем получение текстовых команд, либо через главное меню бота, либо при написании команд вручную'''
