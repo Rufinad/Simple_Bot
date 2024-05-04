@@ -19,6 +19,6 @@ class OfficeHoursMiddleware(BaseMiddleware):
         # используем функцию office_hours, чтобы понять в рабочее время или нет было написано сообщение
         if office_hours():
             return await handler(event, data)
-        await event.answer(f'Время работы бота: \r\nПн-пт с 8 до 18. Я же тоже должен отдыхать!!!')
+        await event.answer(f'Время работы бота: \r\nПн-Сб, с 6 утра до полуночи. Я же тоже должен отдыхать!!!')
 
 

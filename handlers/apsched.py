@@ -9,9 +9,16 @@ from services.exchange_rate import get_exchange_rate
 from services.joke import get_joke
 
 
-async def send_message_time(bot: Bot, request: Request, connector: asyncpg.pool.Pool):
-    request = Request(connector)
+async def create_pool():
+    return await asyncpg.create_pool(user='postgres', password='2787424032', database='bot-users',
+                                             host='127.0.0.1', port=5432, command_timeout=60)
+
+
+async def send_message_time(bot: Bot):
+    pool_connect = await create_pool()
+    request = Request(connector=pool_connect)
     all_data = await request.get_data()
+    # print(all_data)
     # создадим пустые списки по темам рассылки и добавим туда id пользователей у которых эти темы True
     joke = []
     weather = []
@@ -26,7 +33,7 @@ async def send_message_time(bot: Bot, request: Request, connector: asyncpg.pool.
             exchange.append(all_data[i]['user_id'])
         if all_data[i]['horoscope']:
             horoscope.append(all_data[i]['user_id'])
-    # print(joke, weather, exchange, horoscope)
+    print(joke, weather, exchange, horoscope)
     for user in joke:
         res = get_joke()
         await bot.send_message(user, res)
@@ -40,6 +47,5 @@ async def send_message_time(bot: Bot, request: Request, connector: asyncpg.pool.
         horo = await request.get_goro_db(user)  # достанем наименование знака по пользователю
         res = get_horoscope(horo[0]['horoscope'])  # смотри dbconnect
         await bot.send_message(user, res)
-
 
 

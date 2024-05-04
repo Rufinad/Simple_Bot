@@ -57,14 +57,14 @@ async def main():
     }
 
     # добавляем возможность отправки сообщений по времени
-    # scheduler = ContextSchedulerDecorator(AsyncIOScheduler(timezone='Europe/Moscow', jobstores=jobstores))
-    # scheduler.ctx.add_instance(bot, declared_class=Bot)
-    # scheduler.add_job(apsched.send_message_time, trigger='date', run_date=datetime.now() + timedelta(seconds=10),
-    #                   kwargs={'request': Request, 'connector': asyncpg.pool.Pool})
-    # scheduler.add_job(apsched.send_message_time, trigger='cron', hour='23',
-    #                   minute='24', start_date=datetime.now())
+    scheduler = ContextSchedulerDecorator(AsyncIOScheduler(timezone='Europe/Moscow', jobstores=jobstores))
+    scheduler.ctx.add_instance(bot, declared_class=Bot)
+    scheduler.ctx.add_instance(pool_connect, declared_class=asyncpg.Connection)
+    scheduler.add_job(apsched.send_message_time, trigger='date', run_date=datetime.now() + timedelta(seconds=10))
+    scheduler.add_job(apsched.send_message_time, trigger='cron', hour='7',
+                       minute='00', start_date=datetime.now())
 
-    # scheduler.start()
+    scheduler.start()
 
     # Регистриуем роутеры в диспетчере
     dp.include_router(handlers.router)
@@ -72,8 +72,6 @@ async def main():
     dp.include_router(form.router)
 
     dp.include_router(info_type_dialog)
-
-
     setup_dialogs(dp)
 
     dp.message.middleware.register(OfficeHoursMiddleware())
@@ -100,3 +98,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
