@@ -46,6 +46,6 @@ async def send_message_time(bot: Bot):
     for user in horoscope:
         horo = await request.get_goro_db(user)  # достанем наименование знака по пользователю
         res = get_horoscope(horo[0]['horoscope'])  # смотри dbconnect
-        await bot.send_message(user, res)
+        await bot.send_message(user, f'<b>Гороскоп на сегодня:</b> {res}')
 
 

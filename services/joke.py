@@ -15,8 +15,8 @@ def get_joke():
     if response.status_code == 200:
         jokes = soup.find_all('div', class_=['anekdot_text'])
         lst_jokes = [joke.text for joke in jokes]
-        res_joke = random.choice(lst_jokes)
-        # print(res_joke)
+        res_joke = f'<b>Шутка дня:</b> {random.choice(lst_jokes).lstrip()}'
+        print(res_joke)
         return res_joke.encode()
 
 

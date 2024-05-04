@@ -17,7 +17,7 @@ def get_weather_data():
         weather_feel = soup.find('span', {'class': 'unit unit_temperature_c'}).text.strip()
 
         # Формирование строки с прогнозом погоды
-        weather_data = f"Погода на сегодня:\nТемпература: {temperature}\n Ощущается: {weather_feel}"
+        weather_data = f"<b>Погода на сегодня:</b>\nТемпература: {temperature}\n Ощущается: {weather_feel}"
 
         return weather_data
     else:
