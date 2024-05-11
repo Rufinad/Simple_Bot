@@ -60,9 +60,9 @@ async def main():
     scheduler = ContextSchedulerDecorator(AsyncIOScheduler(timezone='Europe/Moscow', jobstores=jobstores))
     scheduler.ctx.add_instance(bot, declared_class=Bot)
     scheduler.ctx.add_instance(pool_connect, declared_class=asyncpg.Connection)
-    scheduler.add_job(apsched.send_message_time, trigger='date', run_date=datetime.now() + timedelta(seconds=10))
-    scheduler.add_job(apsched.send_message_time, trigger='cron', hour='7',
-                       minute='00', start_date=datetime.now())
+    # scheduler.add_job(apsched.send_message_time, trigger='date', run_date=datetime.now() + timedelta(seconds=10))
+    scheduler.add_job(apsched.send_message_cron, trigger='cron', hour='14',
+                       minute='28', start_date=datetime.now())
 
     scheduler.start()
 
